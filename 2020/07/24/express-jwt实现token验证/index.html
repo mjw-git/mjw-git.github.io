@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>express-jwt实现token验证 | 小明博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#ff4081">
+    
+    
+    <meta name="keywords" content="JavaScript,前端,express,Node">
+    <meta name="description" content="由于面试了前端，但是我简历上写着我会后端所以被问到了token验证这个问题，但是我自己的项目是没有用到的，他问了我jwt的组成结构什么的。。我当然是一问三不知啦，所以回来之后就自己额外做了一下这个token验证。 组成jwt主要有三部分组成  header，主要就是存放了你的token类型和你的加密方式。 playload，一般有签发人，签发时间，过期时间，编号等，这部分是可以添加自己的一些数据进">
+<meta property="og:type" content="article">
+<meta property="og:title" content="express-jwt实现token验证">
+<meta property="og:url" content="http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/index.html">
+<meta property="og:site_name" content="小明博客">
+<meta property="og:description" content="由于面试了前端，但是我简历上写着我会后端所以被问到了token验证这个问题，但是我自己的项目是没有用到的，他问了我jwt的组成结构什么的。。我当然是一问三不知啦，所以回来之后就自己额外做了一下这个token验证。 组成jwt主要有三部分组成  header，主要就是存放了你的token类型和你的加密方式。 playload，一般有签发人，签发时间，过期时间，编号等，这部分是可以添加自己的一些数据进">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061900161289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200619003129149.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200619003249344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-07-24T01:49:17.000Z">
+<meta property="article:modified_time" content="2020-07-24T06:39:06.267Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="express">
+<meta property="article:tag" content="Node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/2020061900161289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/%E5%A4%B4%E5%83%8F.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:547783781@qq.com" title="547783781@qq.com" class="mail">547783781@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                所有博客
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags/"  >
+                <i class="icon icon-lg icon-tags"></i>
+                博客标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                博客分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/mjw-git" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <!--
+ * @Author: Meng Jiawei
+ * @Date: 2020-07-24 10:12:20
+ * @LastEditTime: 2020-07-24 14:44:42
+ * @FilePath: \hexo_blog\themes\indigo\layout\_partial\header.ejs
+--> 
+<header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">express-jwt实现token验证</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">express-jwt实现token验证</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-07-24T01:49:17.000Z" itemprop="datePublished" class="page-time">
+  2020-07-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF/">前后端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#组成"><span class="post-toc-number">1.</span> <span class="post-toc-text">组成</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#nodejs生成和验证token"><span class="post-toc-number">2.</span> <span class="post-toc-text">nodejs生成和验证token</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在express路由中的使用"><span class="post-toc-number">3.</span> <span class="post-toc-text">在express路由中的使用</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-express-jwt实现token验证"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">express-jwt实现token验证</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-07-24 09:49:17" datetime="2020-07-24T01:49:17.000Z"  itemprop="datePublished">2020-07-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF/">前后端</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>由于面试了前端，但是我简历上写着我会后端所以被问到了token验证这个问题，但是我自己的项目是没有用到的，他问了我jwt的组成结构什么的。。我当然是一问三不知啦，所以回来之后就自己额外做了一下这个token验证。</p>
+<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>jwt主要有三部分组成</p>
+<ul>
+<li>header，主要就是存放了你的token类型和你的加密方式。</li>
+<li>playload，一般有签发人，签发时间，过期时间，编号等，这部分是可以添加自己的一些数据进去。</li>
+<li>signature，要生成这个是需要以上两个字段的，还需要一个密钥，这是只有服务端才知道的一个密钥，生成公式HMACSHA256(<br>base64UrlEncode(header) + “.” +<br>base64UrlEncode(payload),<br>secret)<br>上两个字段的base64加上密钥，通过’.’来进行连接，然后再通过hash256进行加密。<br>以上三个字段再通过’.’来连接的这样就生成了一个token。</li>
+</ul>
+<h2 id="nodejs生成和验证token"><a href="#nodejs生成和验证token" class="headerlink" title="nodejs生成和验证token"></a>nodejs生成和验证token</h2><p>我们只需要安装一个jsonwebtoken就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install  jsonwebtoken</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @Author: Meng Jiawei</span></span><br><span class="line"><span class="comment"> * @Date: 2020-06-18 22:36:58</span></span><br><span class="line"><span class="comment"> * @LastEditTime: 2020-06-18 23:08:36</span></span><br><span class="line"><span class="comment"> * @FilePath: \expressdemo\index.js</span></span><br><span class="line"><span class="comment"> */</span> </span><br><span class="line"><span class="keyword">const</span> jwt=<span class="built_in">require</span>(<span class="string">'jsonwebtoken'</span>)</span><br><span class="line"><span class="keyword">const</span> playload=&#123;</span><br><span class="line">    name:<span class="string">'mjw'</span>,</span><br><span class="line">    admin:<span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> secret=<span class="string">'mengjiawei'</span></span><br><span class="line"><span class="keyword">const</span> token=jwt.sign(playload,secret,&#123;<span class="attr">expiresIn</span>:<span class="string">'1day'</span>&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(token)</span><br></pre></td></tr></table></figure>
+<p>我们使用jwt.sign方法就可以生成这个token，这个方法主要有三个参数，一个就是基本信息，你从前端拿来需要放进token进行加密的东西，然后就是密钥，最后是一个option，我这边是给了一个过期时间为一天。<br>验证的话我们只要执行下面这一句就行了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">jwt.verify(token,<span class="string">'mengjiawei'</span>,(err,decoded)=&gt;&#123;</span><br><span class="line">        <span class="keyword">if</span>(err)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'invalid'</span>)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(decoded)</span><br><span class="line">    &#125;)</span><br></pre></td></tr></table></figure>
+<p>如果验证失败就会输出invalid，验证成功就会输出你的token明文信息</p>
+<h2 id="在express路由中的使用"><a href="#在express路由中的使用" class="headerlink" title="在express路由中的使用"></a>在express路由中的使用</h2><p>我们生成还是跟之前的一样的，在用户登录的时候生成token并返回，我这边写了个简单的例子，成功则返回token不成功则返回失败</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">router.post(<span class="string">'/login'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(req.headers)</span><br><span class="line">      <span class="keyword">if</span>(req.body.username==<span class="string">'123456'</span>)&#123;</span><br><span class="line">          <span class="keyword">let</span> playload=&#123;&#125;</span><br><span class="line">          playload.username=req.body.username</span><br><span class="line">          playload.password=req.body.password</span><br><span class="line">          <span class="keyword">const</span> secretkey=<span class="string">'MMJJWW'</span></span><br><span class="line">          <span class="keyword">let</span> token=jwt.sign(playload,secretkey,&#123;<span class="attr">expiresIn</span>:<span class="string">'1day'</span>&#125;)</span><br><span class="line">          res.json(&#123;</span><br><span class="line">            code:<span class="number">200</span>,</span><br><span class="line">            msg:<span class="string">'登陆成功'</span>,</span><br><span class="line">            token:token</span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">          res.json(&#123;</span><br><span class="line">            msg:<span class="string">'错误'</span></span><br><span class="line">          &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这边可以用postman来测试一下<br>测试结果：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/2020061900161289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure>
+<p>可以看到成功的返回了token<br>接下来是对每个请求都要进行token验证。我们需要使用express-jwt这个中间件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install express-jwt</span><br></pre></td></tr></table></figure>
+<p>然后我们可以新建一个check.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * @Author: Meng Jiawei</span></span><br><span class="line"><span class="comment"> * @Date: 2020-06-18 23:30:57</span></span><br><span class="line"><span class="comment"> * @LastEditTime: 2020-06-18 23:39:28</span></span><br><span class="line"><span class="comment"> * @FilePath: \expressdemo\check.js</span></span><br><span class="line"><span class="comment"> */</span> </span><br><span class="line"><span class="keyword">const</span> expressjwt=<span class="built_in">require</span>(<span class="string">'express-jwt'</span>)</span><br><span class="line"><span class="keyword">const</span> key=<span class="string">'MMJJWW'</span></span><br><span class="line"><span class="keyword">const</span> jwtauth=expressjwt(&#123;<span class="attr">secret</span>:key&#125;).unless(&#123;<span class="attr">path</span>:[<span class="string">'/users/login'</span>]&#125;)</span><br><span class="line"><span class="built_in">module</span>.exports=jwtauth</span><br></pre></td></tr></table></figure>
+<p>这边就是对中间件的配置，只要以对象形式传递一个密钥参数即可，unless就是不对哪个路由生效，我这边设置了登录的时候不需要验证token。<br>然后在route文件夹下的index.js,配置这个中间件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.use(jwt)</span><br><span class="line">router.use(<span class="function">(<span class="params">req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'这个token被允许了'</span>)</span><br><span class="line">  next()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>只要use就可以了，后一个就是如果验证成功了会执行的，next就是去执行接下来的路由。如果验证失败了，会直接告诉前台出错了，前端需要设置拦截器进行处理<br>我这边他也设置了一个/users/test路由</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">'/test'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)</span>&#123;</span><br><span class="line">  res.send(<span class="string">'token能正常使用'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>就简单的返回一句字符串，主要用来测试的。<br>然后我们前端只要把token放在headers的Authorization字段中就可以了，这个字段是expressjwt规定的，如果不这样设置会报错，说找不到这个字段，然后字段里面的内容要是Bearer+token这个类型的。<br>比如<br>Bearer 1eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjEyMzQ1NiIsInBhc3N3b3JkIjoibWVuZ2ppYXdlaSIsImlhdCI6MTU5MjQ5NDk1NiwiZXhwIjoxNTkyNTgxMzU2fQ.jBkarDsw71y2oXgG19N3Pad2ou2Oz2UDTwhEp9-cJI0<br>不然的话也会报错，说你的格式错误了，一定要在token前加入Bearer。<br>比如我们用postman来对刚才产生的token进行验证一下</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20200619003129149.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure>
+<p>我们发现成功接收到了返回的数据。<br>如果我们在改变token，我在之前的token上在加了一个1，结果如下。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20200619003249344.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" title="">
+                </div>
+                <div class="image-caption">在这里插入图片描述</div>
+            </figure>
+<p>他就会说这个token是非法的。前端只要添加一个拦截器在结果返回前对错误进行处理即可。</p>
+<p>这样我们的token实现基本的权限验证基本就已经完成了，后续还是可以根据自己的需求来完善的。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-07-24T06:39:06.267Z" itemprop="dateUpdated">2020-07-24 14:39:06</time>
+</span><br>
+
+
+        
+        感谢阅读
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/%E5%A4%B4%E5%83%8F.jpg" alt="John Doe">
+            John Doe
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/" rel="tag">express</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div style="width: 100px;" class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&title=《express-jwt实现token验证》 — 小明博客&pic=http://yoursite.com/img/头像.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+   <!--    <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li> -->
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&title=《express-jwt实现token验证》 — 小明博客&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+  <!--     <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《express-jwt实现token验证》 — 小明博客&url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li> -->
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">js实现扫雷</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/07/24/JavaScript%E6%89%8B%E5%86%99%E5%BF%AB%E6%8E%92/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">JavaScript手写快排</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老板
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/weichat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/weichat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+ 
+    <div class="bottom" style="text-align: center;">
+        <span style="font-size: 12px;" >博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        <p><span>John Doe &copy; 2015 - 2020</span>
+            <span>
+                
+                由 <a href="http://hexo.io/" target="_blank">Hexo</a>搭建 主题: <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div style="width: 100px;" class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&title=《express-jwt实现token验证》 — 小明博客&pic=http://yoursite.com/img/头像.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+   <!--    <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li> -->
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&title=《express-jwt实现token验证》 — 小明博客&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+  <!--     <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《express-jwt实现token验证》 — 小明博客&url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li> -->
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '哈哈哈哈.....';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '嘻嘻嘻嘻嘻....';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

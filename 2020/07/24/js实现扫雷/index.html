@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>js实现扫雷 | 小明博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#ff4081">
+    
+    
+    <meta name="keywords" content="JavaScript,前端">
+    <meta name="description" content="实现效果：                                                                                             扫雷              总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js实现扫雷">
+<meta property="og:url" content="http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/index.html">
+<meta property="og:site_name" content="小明博客">
+<meta property="og:description" content="实现效果：                                                                                             扫雷              总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200322191700303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-07-24T01:50:52.000Z">
+<meta property="article:modified_time" content="2020-07-24T04:00:48.867Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200322191700303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/%E5%A4%B4%E5%83%8F.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">John Doe</h5>
+          <a href="mailto:547783781@qq.com" title="547783781@qq.com" class="mail">547783781@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                所有博客
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags/"  >
+                <i class="icon icon-lg icon-tags"></i>
+                博客标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                博客分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/mjw-git" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <!--
+ * @Author: Meng Jiawei
+ * @Date: 2020-07-24 10:12:20
+ * @LastEditTime: 2020-07-24 14:44:42
+ * @FilePath: \hexo_blog\themes\indigo\layout\_partial\header.ejs
+--> 
+<header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">js实现扫雷</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">js实现扫雷</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-07-24T01:50:52.000Z" itemprop="datePublished" class="page-time">
+  2020-07-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#实现效果："><span class="post-toc-number">1.</span> <span class="post-toc-text">实现效果：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#1、界面的生成"><span class="post-toc-number">1.0.1.1.</span> <span class="post-toc-text">1、界面的生成</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个"><span class="post-toc-number">1.0.1.2.</span> <span class="post-toc-text">2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值-1"><span class="post-toc-number">1.0.1.3.</span> <span class="post-toc-text">3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值+1</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#4、添加监听器，我这里添加了touch事件-touch事件只用于移动端，因此pc端要运行要模拟移动端"><span class="post-toc-number">1.0.1.4.</span> <span class="post-toc-text">4、添加监听器，我这里添加了touch事件,touch事件只用于移动端，因此pc端要运行要模拟移动端</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来"><span class="post-toc-number">1.0.1.5.</span> <span class="post-toc-text">5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#6、全部js代码："><span class="post-toc-number">1.0.1.6.</span> <span class="post-toc-text">6、全部js代码：</span></a></li><li class="post-toc-item post-toc-level-6"><a class="post-toc-link" href="#7、总结"><span class="post-toc-number">1.0.1.7.</span> <span class="post-toc-text">7、总结</span></a></li></ol></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-js实现扫雷"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">js实现扫雷</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-07-24 09:50:52" datetime="2020-07-24T01:50:52.000Z"  itemprop="datePublished">2020-07-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a></li></ul>
+
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="实现效果："><a href="#实现效果：" class="headerlink" title="实现效果："></a>实现效果：</h3><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://img-blog.csdnimg.cn/20200322191700303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwMDI2MDcw,size_16,color_FFFFFF,t_70" alt="扫雷" title="">
+                </div>
+                <div class="image-caption">扫雷</div>
+            </figure>
+<h5 id="总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现"><a href="#总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现" class="headerlink" title="总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现"></a>总体思想：这个扫雷难点主要就两点：第一点就是雷的随机分布，我这里使用js动态生成了10X10的table表格，然后设定生成20个雷，然后在生成每个格子代表的数字，雷我们用9表示，因为0-8要被其他非雷格子使用，然后我们只要一格是雷区那么周围的格子都加一，这样我们的雷区就生成好了，然后玩法的编写主要难点就是在当点击数字为0时的格子时要把它周围的0区也显示出来，因此这里我们使用递归来实现</h5><h6 id="1、界面的生成"><a href="#1、界面的生成" class="headerlink" title="1、界面的生成"></a>1、界面的生成</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生成界面</span></span><br><span class="line">			<span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">				<span class="built_in">document</span>.write(<span class="string">"&lt;table border='1px'  rules='all' cellpadding='10px '&gt; "</span>)</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">					<span class="built_in">document</span>.write(<span class="string">"&lt;tr&gt;"</span>);</span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">						<span class="built_in">document</span>.write(<span class="string">"&lt;td class='game'&gt;"</span> + arr3[i][j] + <span class="string">"&lt;/td&gt;"</span>);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="built_in">document</span>.write(<span class="string">"&lt;/tr&gt;"</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="built_in">document</span>.write(<span class="string">"&lt;/table&gt;"</span>)</span><br><span class="line">				<span class="keyword">var</span> t = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'table'</span>)[<span class="number">0</span>];</span><br><span class="line">				<span class="keyword">var</span> td = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'td'</span>);</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; td.length; i++) &#123;</span><br><span class="line">					td[i].style.background=<span class="string">'#ffffff'</span>;</span><br><span class="line">					td[i].style.opacity = <span class="string">'0'</span>;</span><br><span class="line">					td[i].style.transition = <span class="string">'all 4s'</span></span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">//样式添加</span></span><br><span class="line">				t.style.margin = <span class="string">'0px auto'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">				<span class="built_in">document</span>.close()</span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个"><a href="#2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个" class="headerlink" title="2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个"></a>2、我们表格是10X10的，但是后面的操作要计算每个格子的值，因此当格子在边界的话数组就会越界，所以我们这边定义二维数组12X12来表示10X10的表格中的数值，雷我们随机生成20个</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化数组</span></span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">initarr</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">			<span class="keyword">var</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>);</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">12</span>; i++) &#123;</span><br><span class="line">				arr[i] = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>);</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; <span class="number">12</span>; j++) &#123;</span><br><span class="line">					arr[i][j] = <span class="number">0</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> arr;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//随机生成雷</span></span><br><span class="line">		<span class="function"><span class="keyword">function</span> <span class="title">rangemine</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">			<span class="keyword">var</span> arr = initarr();</span><br><span class="line"></span><br><span class="line">			<span class="keyword">var</span> num = <span class="number">0</span>;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; <span class="number">20</span>; index++) &#123;</span><br><span class="line">				<span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">					<span class="keyword">var</span> row = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">					<span class="keyword">var</span> col = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">					<span class="keyword">if</span> (arr[row][col] != <span class="number">9</span>) &#123;</span><br><span class="line">						arr[row][col] = <span class="number">9</span>;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> arr;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值-1"><a href="#3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值-1" class="headerlink" title="3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值+1"></a>3、生成每块对应的数值我们实现方法为遍历数组，如果为雷，则雷周围的八块的数值+1</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生成每块所对应的数字</span></span><br><span class="line">			<span class="function"><span class="keyword">function</span> <span class="title">num</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">				<span class="keyword">var</span> arr2 = rangemine();</span><br><span class="line"></span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">						<span class="keyword">if</span> (arr2[i][j] &gt;= <span class="number">9</span>) &#123;</span><br><span class="line">							arr2[i][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">							arr2[i][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">							arr2[i - <span class="number">1</span>][j] += <span class="number">1</span>;</span><br><span class="line">							arr2[i + <span class="number">1</span>][j] += <span class="number">1</span>;</span><br><span class="line">							arr2[i - <span class="number">1</span>][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">							arr2[i - <span class="number">1</span>][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">							arr2[i + <span class="number">1</span>][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">							arr2[i + <span class="number">1</span>][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">						<span class="keyword">if</span> (arr2[i][j] &gt; <span class="number">8</span>) &#123;</span><br><span class="line">							arr2[i][j] = <span class="number">9</span>;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">return</span> arr2;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="4、添加监听器，我这里添加了touch事件-touch事件只用于移动端，因此pc端要运行要模拟移动端"><a href="#4、添加监听器，我这里添加了touch事件-touch事件只用于移动端，因此pc端要运行要模拟移动端" class="headerlink" title="4、添加监听器，我这里添加了touch事件,touch事件只用于移动端，因此pc端要运行要模拟移动端"></a>4、添加监听器，我这里添加了touch事件,touch事件只用于移动端，因此pc端要运行要模拟移动端</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加监听器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gostart</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> t = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'td'</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; t.length; i++) &#123;</span><br><span class="line">		&#123;</span><br><span class="line">			t[i].addEventListener(<span class="string">'touchstart'</span>, start);</span><br><span class="line">			t[i].addEventListener(<span class="string">'touchend'</span>, end);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">gostart();</span><br><span class="line"><span class="comment">//开始函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">start</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log((e.touches[<span class="number">0</span>]));</span><br><span class="line">	<span class="keyword">var</span> a = e.touches[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//结尾函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">end</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> a = e.touches[<span class="number">0</span>];</span><br><span class="line">	mix(e.srcElement.parentElement.rowIndex + <span class="number">1</span>, e.srcElement.cellIndex + <span class="number">1</span>, e.srcElement.parentElement);</span><br><span class="line">	<span class="comment">/* startgame(e.srcElement.parentElement.rowIndex,e.srcElement.cellIndex,e.srcElement); */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来"><a href="#5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来" class="headerlink" title="5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来"></a>5、递归实现扫雷，对周围没有雷的格子进行递归将其周围也是0的格子展示出来</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归消除点到0块时显露出其他的块</span></span><br><span class="line">			<span class="function"><span class="keyword">function</span> <span class="title">mix</span>(<span class="params">x, y, e</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">var</span> flag=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">				<span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">					<span class="comment">//防止无限递归</span></span><br><span class="line">					e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.opacity = <span class="number">1</span>;</span><br><span class="line">					e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].innerHTML=<span class="string">""</span>;</span><br><span class="line">					e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.background = <span class="string">'#a4eaff'</span>;</span><br><span class="line">					arr3[x][y] = <span class="number">10</span>;</span><br><span class="line">					mix(x, y + <span class="number">1</span>, e);</span><br><span class="line">					mix(x, y - <span class="number">1</span>, e);</span><br><span class="line">					mix(x + <span class="number">1</span>, y, e);</span><br><span class="line">					mix(x - <span class="number">1</span>, y, e);</span><br><span class="line">					mix(x + <span class="number">1</span>, y + <span class="number">1</span>, e);</span><br><span class="line">					mix(x - <span class="number">1</span>, y + <span class="number">1</span>, e);</span><br><span class="line">					mix(x + <span class="number">1</span>, y - <span class="number">1</span>, e);</span><br><span class="line">					mix(x - <span class="number">1</span>, y - <span class="number">1</span>, e);</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] &gt; <span class="number">0</span> &amp;&amp; arr3[x][y] &lt; <span class="number">9</span>) &#123;</span><br><span class="line">					<span class="comment">//颜色变红且透明度变为1</span></span><br><span class="line">					arr3[x][y]=<span class="number">-1</span>;</span><br><span class="line">					e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.opacity = <span class="number">1</span>;</span><br><span class="line">					e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.backgroundColor = <span class="string">'#a4eaff'</span>;</span><br><span class="line">					<span class="comment">//判断是否结束</span></span><br><span class="line">					<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">1</span>;i&lt;arr3.length<span class="number">-1</span>;i++)&#123;</span><br><span class="line">						<span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">1</span>;j&lt;arr3[i].length<span class="number">-1</span>;j++)&#123;</span><br><span class="line">								<span class="keyword">if</span>(arr3[i][j]!=<span class="number">-1</span>||arr3[i][j]!=<span class="number">9</span>)&#123;</span><br><span class="line">									flag=<span class="number">1</span>;</span><br><span class="line">									<span class="keyword">break</span>;</span><br><span class="line">								&#125;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span>(flag==<span class="number">0</span>)&#123;</span><br><span class="line">						alert(<span class="string">'成功'</span>);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] == <span class="number">9</span>) &#123;</span><br><span class="line">					alert(<span class="string">'你踩到地雷啦！！！'</span>);</span><br><span class="line">					arr3 = num();</span><br><span class="line">					<span class="comment">//移除原来的表格</span></span><br><span class="line">					<span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'table'</span>)[<span class="number">0</span>];</span><br><span class="line">					s.parentNode.removeChild(s);</span><br><span class="line">					init();</span><br><span class="line">					gostart();</span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="6、全部js代码："><a href="#6、全部js代码：" class="headerlink" title="6、全部js代码："></a>6、全部js代码：</h6><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initarr</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> arr = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">12</span>; i++) &#123;</span><br><span class="line">		arr[i] = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">12</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; <span class="number">12</span>; j++) &#123;</span><br><span class="line">			arr[i][j] = <span class="number">0</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//随机生成雷</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">rangemine</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> arr = initarr();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> num = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> index = <span class="number">0</span>; index &lt; <span class="number">20</span>; index++) &#123;</span><br><span class="line">		<span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">			<span class="keyword">var</span> row = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">var</span> col = <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>;</span><br><span class="line">			<span class="keyword">if</span> (arr[row][col] != <span class="number">9</span>) &#123;</span><br><span class="line">				arr[row][col] = <span class="number">9</span>;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//生成每块所对应的数字</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">num</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> arr2 = rangemine();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">			<span class="keyword">if</span> (arr2[i][j] &gt;= <span class="number">9</span>) &#123;</span><br><span class="line">				arr2[i][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">				arr2[i][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">				arr2[i - <span class="number">1</span>][j] += <span class="number">1</span>;</span><br><span class="line">				arr2[i + <span class="number">1</span>][j] += <span class="number">1</span>;</span><br><span class="line">				arr2[i - <span class="number">1</span>][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">				arr2[i - <span class="number">1</span>][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">				arr2[i + <span class="number">1</span>][j - <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line">				arr2[i + <span class="number">1</span>][j + <span class="number">1</span>] += <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">			<span class="keyword">if</span> (arr2[i][j] &gt; <span class="number">8</span>) &#123;</span><br><span class="line">				arr2[i][j] = <span class="number">9</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> arr2;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arr3 = num()</span><br><span class="line"><span class="comment">//生成界面</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">document</span>.write(<span class="string">"&lt;table border='1px'  rules='all' cellpadding='10px '&gt; "</span>)</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; <span class="number">11</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">document</span>.write(<span class="string">"&lt;tr&gt;"</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">1</span>; j &lt; <span class="number">11</span>; j++) &#123;</span><br><span class="line">			<span class="built_in">document</span>.write(<span class="string">"&lt;td class='game'&gt;"</span> + arr3[i][j] + <span class="string">"&lt;/td&gt;"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">document</span>.write(<span class="string">"&lt;/tr&gt;"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">document</span>.write(<span class="string">"&lt;/table&gt;"</span>)</span><br><span class="line">	<span class="keyword">var</span> t = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'table'</span>)[<span class="number">0</span>];</span><br><span class="line">	<span class="keyword">var</span> td = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'td'</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; td.length; i++) &#123;</span><br><span class="line">		td[i].style.background=<span class="string">'#ffffff'</span>;</span><br><span class="line">		td[i].style.opacity = <span class="string">'0'</span>;</span><br><span class="line">		td[i].style.transition = <span class="string">'all 4s'</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//样式添加</span></span><br><span class="line">	t.style.margin = <span class="string">'0px auto'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="built_in">document</span>.close()</span><br><span class="line">&#125;</span><br><span class="line">init();</span><br><span class="line"><span class="comment">//添加监听器</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">gostart</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> t = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'td'</span>);</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; t.length; i++) &#123;</span><br><span class="line">		&#123;</span><br><span class="line">			t[i].addEventListener(<span class="string">'touchstart'</span>, start);</span><br><span class="line">			t[i].addEventListener(<span class="string">'touchend'</span>, end);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">gostart();</span><br><span class="line"><span class="comment">//开始函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">start</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log((e.touches[<span class="number">0</span>]));</span><br><span class="line">	<span class="keyword">var</span> a = e.touches[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//结尾函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">end</span>(<span class="params">e</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> a = e.touches[<span class="number">0</span>];</span><br><span class="line">	mix(e.srcElement.parentElement.rowIndex + <span class="number">1</span>, e.srcElement.cellIndex + <span class="number">1</span>, e.srcElement.parentElement);</span><br><span class="line">	<span class="comment">/* startgame(e.srcElement.parentElement.rowIndex,e.srcElement.cellIndex,e.srcElement); */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//递归消除点到0块时显露出其他的块</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mix</span>(<span class="params">x, y, e</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> flag=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] == <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="comment">//防止无限递归</span></span><br><span class="line">		e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.opacity = <span class="number">1</span>;</span><br><span class="line">		e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].innerHTML=<span class="string">""</span>;</span><br><span class="line">		e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.background = <span class="string">'#a4eaff'</span>;</span><br><span class="line">		arr3[x][y] = <span class="number">10</span>;</span><br><span class="line">		mix(x, y + <span class="number">1</span>, e);</span><br><span class="line">		mix(x, y - <span class="number">1</span>, e);</span><br><span class="line">		mix(x + <span class="number">1</span>, y, e);</span><br><span class="line">		mix(x - <span class="number">1</span>, y, e);</span><br><span class="line">		mix(x + <span class="number">1</span>, y + <span class="number">1</span>, e);</span><br><span class="line">		mix(x - <span class="number">1</span>, y + <span class="number">1</span>, e);</span><br><span class="line">		mix(x + <span class="number">1</span>, y - <span class="number">1</span>, e);</span><br><span class="line">		mix(x - <span class="number">1</span>, y - <span class="number">1</span>, e);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] &gt; <span class="number">0</span> &amp;&amp; arr3[x][y] &lt; <span class="number">9</span>) &#123;</span><br><span class="line">		<span class="comment">//颜色变红且透明度变为1</span></span><br><span class="line">		arr3[x][y]=<span class="number">-1</span>;</span><br><span class="line">		e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.opacity = <span class="number">1</span>;</span><br><span class="line">		e.parentElement.rows[x - <span class="number">1</span>].cells[y - <span class="number">1</span>].style.backgroundColor = <span class="string">'#a4eaff'</span>;</span><br><span class="line">		<span class="comment">//判断是否结束</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">1</span>;i&lt;arr3.length<span class="number">-1</span>;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">1</span>;j&lt;arr3[i].length<span class="number">-1</span>;j++)&#123;</span><br><span class="line">					<span class="keyword">if</span>(arr3[i][j]!=<span class="number">-1</span>||arr3[i][j]!=<span class="number">9</span>)&#123;</span><br><span class="line">						flag=<span class="number">1</span>;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(flag==<span class="number">0</span>)&#123;</span><br><span class="line">			alert(<span class="string">'成功'</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; x &lt; <span class="number">11</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; y &lt; <span class="number">11</span> &amp;&amp; arr3[x][y] == <span class="number">9</span>) &#123;</span><br><span class="line">		alert(<span class="string">'你踩到地雷啦！！！'</span>);</span><br><span class="line">		arr3 = num();</span><br><span class="line">		<span class="comment">//移除原来的表格</span></span><br><span class="line">		<span class="keyword">var</span> s = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'table'</span>)[<span class="number">0</span>];</span><br><span class="line">		s.parentNode.removeChild(s);</span><br><span class="line">		init();</span><br><span class="line">		gostart();</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h6 id="7、总结"><a href="#7、总结" class="headerlink" title="7、总结"></a>7、总结</h6><p>这次的扫雷最大的缺点就是不能保证第一次不点到雷，还有就是是否还没有进行测试。。因为我也没有玩过一整局可能会有些许小bug</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-07-24T04:00:48.867Z" itemprop="dateUpdated">2020-07-24 12:00:48</time>
+</span><br>
+
+
+        
+        感谢阅读
+        
+    </div>
+    
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="/img/%E5%A4%B4%E5%83%8F.jpg" alt="John Doe">
+            John Doe
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div style="width: 100px;" class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&title=《js实现扫雷》 — 小明博客&pic=http://yoursite.com/img/头像.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+   <!--    <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li> -->
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&title=《js实现扫雷》 — 小明博客&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+  <!--     <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《js实现扫雷》 — 小明博客&url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li> -->
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/07/24/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%951/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前端面试(CSS部分)</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/07/24/express-jwt%E5%AE%9E%E7%8E%B0token%E9%AA%8C%E8%AF%81/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">express-jwt实现token验证</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢老板
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/weichat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/weichat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+ 
+    <div class="bottom" style="text-align: center;">
+        <span style="font-size: 12px;" >博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        <p><span>John Doe &copy; 2015 - 2020</span>
+            <span>
+                
+                由 <a href="http://hexo.io/" target="_blank">Hexo</a>搭建 主题: <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div style="width: 100px;" class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&title=《js实现扫雷》 — 小明博客&pic=http://yoursite.com/img/头像.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+   <!--    <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li> -->
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&title=《js实现扫雷》 — 小明博客&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+  <!--     <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《js实现扫雷》 — 小明博客&url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li> -->
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://yoursite.com/2020/07/24/js%E5%AE%9E%E7%8E%B0%E6%89%AB%E9%9B%B7/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '哈哈哈哈.....';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '嘻嘻嘻嘻嘻....';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
