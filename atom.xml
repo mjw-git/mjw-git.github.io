@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-07-25T08:00:04.703Z</updated>
+  <updated>2020-08-07T06:16:55.770Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JavaScript模拟实现call、apply、bind</title>
+    <link href="http://yoursite.com/2020/08/07/JavaScript%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0call%E3%80%81apply%E3%80%81bind/"/>
+    <id>http://yoursite.com/2020/08/07/JavaScript%E6%A8%A1%E6%8B%9F%E5%AE%9E%E7%8E%B0call%E3%80%81apply%E3%80%81bind/</id>
+    <published>2020-08-07T06:15:04.000Z</published>
+    <updated>2020-08-07T06:16:55.770Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h3 id=&quot;1、实现call&quot;&gt;&lt;a href=&quot;#1、实现call&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="前端" scheme="http://yoursite.com/categories/%E5%89%8D%E7%AB%AF/"/>
+    
+    
+      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+    
+      <category term="前端" scheme="http://yoursite.com/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>JavaScript遍历数组</title>
