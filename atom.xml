@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-08-07T06:16:55.770Z</updated>
+  <updated>2020-08-07T09:39:59.813Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>防抖、节流</title>
+    <link href="http://yoursite.com/2020/08/07/%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/"/>
+    <id>http://yoursite.com/2020/08/07/%E9%98%B2%E6%8A%96%E3%80%81%E8%8A%82%E6%B5%81/</id>
+    <published>2020-08-07T09:39:07.000Z</published>
+    <updated>2020-08-07T09:39:59.813Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;防抖节流是前端性能优化的一部分了，在一些场景中我们需要使用他们来帮助我们减少不必要的消耗，尤其是对一些监听事件的不必要消耗的优化。&lt;/p&gt;
+&lt;h3 id=&quot;为什么要进行优化？&quot;&gt;&lt;a href=&quot;#为什么要进行优化？&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="JavaScript" scheme="http://yoursite.com/tags/JavaScript/"/>
+    
+      <category term="前端" scheme="http://yoursite.com/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
   
   <entry>
     <title>JavaScript模拟实现call、apply、bind</title>
